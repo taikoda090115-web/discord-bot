@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>注文番号表示</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-size: 10rem;
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div id="orderNumber">---</div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "XXXXX",
+      authDomain: "XXXXX.firebaseapp.com",
+      databaseURL: "https://XXXXX.firebaseio.com",
+      projectId: "XXXXX",
+      storageBucket: "XXXXX.appspot.com",
+      messagingSenderId: "XXXXX",
+      appId: "XXXXX"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const orderRef = ref(db, 'orders/current');
+    onValue(orderRef, (snapshot) => {
+      const number = snapshot.val();
+      document.getElementById("orderNumber").textContent = number ?? "---";
+    });
+  </script>
+</body>
+</html>
