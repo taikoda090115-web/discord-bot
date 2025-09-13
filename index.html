@@ -5,41 +5,23 @@
   <title>注文番号表示</title>
   <style>
     body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-size: 10rem;
       font-family: sans-serif;
-      text-align: center;
-      background: #f8f8f8;
-      padding: 20px;
-    }
-    h1 {
-      font-size: 3rem;
-      margin: 1rem 0;
-    }
-    .numbers {
-      font-size: 5rem;
-      margin: 1rem 0;
-    }
-    .calling {
-      color: red;
-      animation: blink 1s step-start infinite;
-    }
-    @keyframes blink {
-      50% { opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <h1>お待ちの番号</h1>
-  <div id="waiting" class="numbers">---</div>
-
-  <h1>お呼び出しの番号</h1>
-  <div id="calling" class="numbers calling">---</div>
+  <div id="orderNumber">---</div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-    // 🔹 Firebase設定（ここも自分のプロジェクト情報に置き換え）
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   const firebaseConfig = {
     apiKey: "AIzaSyA29QotMooUfQ_QyB1YleAOLqvift9lF1g",
     authDomain: "test-order-number.firebaseapp.com",
@@ -54,16 +36,10 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    const ordersRef = ref(db, 'orders');
-    onValue(ordersRef, (snapshot) => {
-      const data = snapshot.val();
-      if (!data) return;
-
-      document.getElementById("waiting").textContent =
-        data.waiting && data.waiting.length > 0 ? data.waiting.join(", ") : "---";
-
-      document.getElementById("calling").textContent =
-        data.calling && data.calling.length > 0 ? data.calling.join(", ") : "---";
+    const orderRef = ref(db, 'orders/current');
+    onValue(orderRef, (snapshot) => {
+      const number = snapshot.val();
+      document.getElementById("orderNumber").textContent = number ?? "---";
     });
   </script>
 </body>
